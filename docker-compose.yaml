@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: todo-mongodb
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./todo-backend
+    container_name: todo-backend
+    environment:
+      APP_PORT: 5000
+      APP_BASE_URL: http://localhost
+      APP_API_PREFIX: /api
+      MONGO_URI: mongodb://mongodb:27017/todo
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./todo-fronted
+    container_name: todo-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
