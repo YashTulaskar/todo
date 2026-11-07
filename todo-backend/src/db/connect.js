@@ -17,6 +17,8 @@ const connectDatabase = async () => {
       })
       .catch((error) => {
         console.log("Error connecting to MongoDB: ", error.message);
+        throw Error; // added on 10th sept for healtchecks
+        
       });
   } catch (error) {
     console.log("Database connection error: ", error.message);

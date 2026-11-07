@@ -12,6 +12,7 @@
 const express = require("express");
 const env = require("dotenv");
 const favicon = require("serve-favicon");
+const mongoose = require("mongoose");
 var path = require("path");
 var cors = require("cors");
 
@@ -48,6 +49,22 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to TODO Node.js application backend." });
 });
+
+// Health Check logic 
+app.get("/health", (req, res) => {
+  if (mongoose.connection.readyState === 1) {
+    return res.status(200).json({
+      status: "healthy",
+      database: "connected",
+    });
+  }
+
+  return res.status(500).json({
+    status: "unhealthy",
+    database: "disconnected",
+  });
+});
+
 
 // todos api routes
 app.use(process.env.APP_API_PREFIX, todos);
